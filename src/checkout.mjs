@@ -6,8 +6,10 @@ export function priceOrder(checkoutCart) {
   if (checkoutCart.lines.some((line) => line.stockStatus !== 'in-stock')) {
     throw new Error('checkout cart contains unavailable product');
   }
+  const categories = [...new Set(checkoutCart.lines.map((line) => line.category).filter(Boolean))];
   return {
     status: 'priced',
+    categories,
     lineCount: checkoutCart.lines.length,
     subtotalCents: checkoutCart.subtotalCents,
     totalCents: checkoutCart.totalCents,

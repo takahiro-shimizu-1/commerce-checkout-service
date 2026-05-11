@@ -2,3 +2,6 @@ node_modules/
 .env
 .gitnexus/
 .claude/skills/gitnexus/
+.npmrc
+.ai/
+project_memory/tasks.json

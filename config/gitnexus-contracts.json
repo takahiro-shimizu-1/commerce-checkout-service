@@ -22,17 +22,6 @@
       "providers": [
         "features/cart"
       ]
-    },
-    {
-      "id": "CART_COUPON_CONTRACT",
-      "type": "semantic-symbol",
-      "role": "consumer",
-      "symbol": "CART_COUPON_CONTRACT",
-      "filePath": "src/checkout.mjs",
-      "version": "1",
-      "providers": [
-        "features/cart"
-      ]
     }
   ]
 }

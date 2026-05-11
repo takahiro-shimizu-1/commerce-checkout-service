@@ -1,0 +1,29 @@
+name: Miyabi State Observation
+
+on:
+  issues:
+    types: [labeled, closed]
+  pull_request:
+    types: [opened, reopened, closed]
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+jobs:
+  observe:
+    name: Record state event
+    runs-on: ubuntu-latest
+    steps:
+      - name: Write summary
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          ACTION_NAME: ${{ github.event.action }}
+        run: |
+          {
+            echo "### Miyabi State Observation"
+            echo "- repo: $GITHUB_REPOSITORY"
+            echo "- event: ${EVENT_NAME}"
+            echo "- action: ${ACTION_NAME}"
+          } >> "$GITHUB_STEP_SUMMARY"

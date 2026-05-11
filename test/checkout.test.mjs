@@ -4,7 +4,7 @@ import { priceOrder } from '../src/checkout.mjs';
 
 test('checkout prices a cart contract payload', () => {
   const order = priceOrder({
-    lines: [{ productId: 'sku-1', unitPriceCents: 1200, quantity: 2 }],
+    lines: [{ productId: 'sku-1', unitPriceCents: 1200, quantity: 2, stockStatus: 'in-stock' }],
     subtotalCents: 2400,
     discountCents: 240,
     couponCode: 'SAVE10',

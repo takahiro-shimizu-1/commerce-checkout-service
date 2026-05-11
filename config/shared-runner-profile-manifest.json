@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "selectedProfile": "planning-only",
+  "runnerCommand": "automation-runner",
+  "runnerPackage": {
+    "name": "@example/automation-runner",
+    "scope": "@example",
+    "registry": "https://npm.pkg.github.com",
+    "auth": {
+      "workflowDefaultToken": "github.token",
+      "workflowFallbackSecret": "AUTOMATION_RUNNER_PACKAGE_TOKEN",
+      "localEnv": "AUTOMATION_RUNNER_PACKAGE_TOKEN",
+      "requiredClassicScopes": [
+        "read:packages"
+      ]
+    }
+  },
+  "runnerBaseline": {
+    "node": "20",
+    "requiredTools": [
+      "bash",
+      "git"
+    ],
+    "optionalToolsByProfile": {}
+  },
+  "gitnexus": {
+    "repoName": "commerce-checkout-service",
+    "registryName": "commerce-checkout-service",
+    "repoSlug": "takahiro-shimizu-1/commerce-checkout-service",
+    "portfolios": [
+      {
+        "name": "commerce-e2e",
+        "groupPath": "features/checkout"
+      }
+    ],
+    "bootstrap": {
+      "enabled": true,
+      "defaultCommand": "automation-runner gitnexus-bootstrap"
+    }
+  },
+  "bootstrapAssets": {
+    "workflows": [
+      ".github/workflows/ci.yml",
+      ".github/workflows/issue-opened.yml",
+      ".github/workflows/pr-opened.yml",
+      ".github/workflows/state-machine.yml",
+      ".github/workflows/task-lifecycle.yml"
+    ],
+    "labels": [],
+    "templates": [
+      ".github/ISSUE_TEMPLATE/agent-task.md",
+      ".github/PULL_REQUEST_TEMPLATE.md"
+    ],
+    "claudeCommands": [],
+    "onboarding": [
+      ".github/scripts/miyabi-task-lifecycle.mjs"
+    ]
+  },
+  "profiles": {
+    "planning-only": {
+      "permissions": {
+        "required": {},
+        "optional": {},
+        "forbidden": []
+      },
+      "secrets": {
+        "required": [],
+        "optional": [],
+        "forbidden": []
+      },
+      "variables": {
+        "required": [],
+        "optional": [],
+        "forbidden": []
+      },
+      "plannedPackageWrappers": []
+    }
+  }
+}

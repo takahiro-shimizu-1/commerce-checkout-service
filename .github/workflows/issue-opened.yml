@@ -1,0 +1,25 @@
+name: Miyabi Issue Intake
+
+on:
+  issues:
+    types: [opened, reopened]
+
+permissions:
+  issues: read
+
+jobs:
+  intake:
+    name: Record issue intake
+    runs-on: ubuntu-latest
+    steps:
+      - name: Write summary
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+        run: |
+          {
+            echo "### Miyabi Issue Intake"
+            echo "- repo: $GITHUB_REPOSITORY"
+            echo "- issue: #${ISSUE_NUMBER}"
+            echo "- title: ${ISSUE_TITLE}"
+          } >> "$GITHUB_STEP_SUMMARY"

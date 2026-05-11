@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "contracts": [
+    {
+      "id": "CATALOG_PRODUCT_CONTRACT",
+      "type": "semantic-symbol",
+      "role": "consumer",
+      "symbol": "CATALOG_PRODUCT_CONTRACT",
+      "filePath": "src/checkout.mjs",
+      "version": "1",
+      "providers": [
+        "features/catalog"
+      ]
+    },
+    {
+      "id": "CART_CHECKOUT_CONTRACT",
+      "type": "semantic-symbol",
+      "role": "consumer",
+      "symbol": "CART_CHECKOUT_CONTRACT",
+      "filePath": "src/checkout.mjs",
+      "version": "1",
+      "providers": [
+        "features/cart"
+      ]
+    },
+    {
+      "id": "CART_COUPON_CONTRACT",
+      "type": "semantic-symbol",
+      "role": "consumer",
+      "symbol": "CART_COUPON_CONTRACT",
+      "filePath": "src/checkout.mjs",
+      "version": "1",
+      "providers": [
+        "features/cart"
+      ]
+    }
+  ]
+}

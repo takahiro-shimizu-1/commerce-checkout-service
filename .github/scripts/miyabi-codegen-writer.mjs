@@ -24,8 +24,12 @@ function updateContracts(mutator) {
 
 function replaceOnce(filePath, search, replacement) {
   const current = readFileSync(filePath, 'utf8');
-  if (!current.includes(search)) {
-    throw new Error(`Expected text not found in ${filePath}`);
+  if (current.includes(search)) {
+    writeFileSync(filePath, current.replace(search, replacement), 'utf8');
+    return;
   }
-  writeFileSync(filePath, current.replace(search, replacement), 'utf8');
+  if (current.includes(replacement)) {
+    return;
+  }
+  throw new Error(`Expected text not found in ${filePath}`);
 }

@@ -7,7 +7,7 @@
       "role": "consumer",
       "symbol": "CATALOG_PRODUCT_CONTRACT",
       "filePath": "src/checkout.mjs",
-      "version": "1",
+      "version": "2",
       "providers": [
         "features/catalog"
       ]

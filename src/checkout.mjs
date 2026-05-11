@@ -4,6 +4,9 @@ export const CART_COUPON_CONTRACT = 'cart-coupon-v1';
 
 export function priceOrder(checkoutCart) {
   if (!checkoutCart || !Array.isArray(checkoutCart.lines)) throw new Error('invalid checkout cart');
+  if (checkoutCart.lines.some((line) => line.stockStatus !== 'in-stock')) {
+    throw new Error('checkout cart contains unavailable product');
+  }
   return {
     status: 'priced',
     lineCount: checkoutCart.lines.length,

@@ -1,0 +1,36 @@
+name: Miyabi PR Review Gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  review-gate:
+    name: Test and contract gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run repository test
+        run: npm test
+      - name: Check Miyabi contract files
+        run: |
+          test -f config/gitnexus-contracts.json
+          test -f config/shared-runner-profile-manifest.json
+      - name: Write summary
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          {
+            echo "### Miyabi PR Review Gate"
+            echo "- repo: $GITHUB_REPOSITORY"
+            echo "- pr: #${PR_NUMBER}"
+            echo "- verified: npm test"
+            echo "- verified: GitNexus contract files"
+          } >> "$GITHUB_STEP_SUMMARY"

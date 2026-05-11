@@ -1,0 +1,33 @@
+name: Miyabi Task Lifecycle
+
+on:
+  issues:
+    types: [opened, reopened]
+
+permissions:
+  actions: read
+  checks: read
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  task-lifecycle:
+    name: Plan, change, PR, and merge
+    if: contains(github.event.issue.body, 'miyabi-task:')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PROJECT_TOKEN || github.token }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run Miyabi task lifecycle
+        env:
+          GH_TOKEN: ${{ secrets.GH_PROJECT_TOKEN || github.token }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+        run: node .github/scripts/miyabi-task-lifecycle.mjs

@@ -7,9 +7,11 @@ export function priceOrder(checkoutCart) {
     throw new Error('checkout cart contains unavailable product');
   }
   const categories = [...new Set(checkoutCart.lines.map((line) => line.category).filter(Boolean))];
+  const taxClasses = [...new Set(checkoutCart.lines.map((line) => line.taxClass).filter(Boolean))];
   return {
     status: 'priced',
     categories,
+    taxClasses,
     lineCount: checkoutCart.lines.length,
     subtotalCents: checkoutCart.subtotalCents,
     totalCents: checkoutCart.totalCents,

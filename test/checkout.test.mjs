@@ -11,6 +11,8 @@ test('checkout prices a cart contract payload', () => {
   });
   assert.equal(order.status, 'priced');
   assert.equal(order.totalCents, 2400);
+  assert.equal(order.amountDueCents, 2400);
+  assert.equal(order.amountDueCents, 2400);
   assert.deepEqual(order.categories, ['stationery']);
   assert.deepEqual(order.taxClasses, ['standard']);
 });

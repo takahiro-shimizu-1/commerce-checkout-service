@@ -15,6 +15,7 @@ export function priceOrder(checkoutCart) {
     lineCount: checkoutCart.lines.length,
     subtotalCents: checkoutCart.subtotalCents,
     totalCents: checkoutCart.totalCents,
+    amountDueCents: checkoutCart.totalCents,
     currency: checkoutCart.currency,
   };
 }

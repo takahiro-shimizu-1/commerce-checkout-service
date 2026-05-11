@@ -3,7 +3,7 @@
     "slug": "takahiro-shimizu-1/commerce-checkout-service"
   },
   "workspaceGlobs": [
-    "app"
+    "."
   ],
   "auditWorkspaceGlobs": []
 }

@@ -3,26 +3,15 @@ import { readFileSync, writeFileSync } from 'node:fs';
 
 replaceOnce(
   'src/checkout.mjs',
-  '  const categories = [...new Set(checkoutCart.lines.map((line) => line.category).filter(Boolean))];\n',
-  '  const categories = [...new Set(checkoutCart.lines.map((line) => line.category).filter(Boolean))];\n  const taxClasses = [...new Set(checkoutCart.lines.map((line) => line.taxClass).filter(Boolean))];\n',
-);
-replaceOnce(
-  'src/checkout.mjs',
-  '    categories,\n    lineCount: checkoutCart.lines.length,',
-  '    categories,\n    taxClasses,\n    lineCount: checkoutCart.lines.length,',
+  '    totalCents: checkoutCart.totalCents,\n    currency: checkoutCart.currency,',
+  '    totalCents: checkoutCart.totalCents,\n    amountDueCents: checkoutCart.totalCents,\n    currency: checkoutCart.currency,',
 );
 replaceOnce(
   'test/checkout.test.mjs',
-  "    lines: [{ productId: 'sku-1', unitPriceCents: 1200, quantity: 2, category: 'stationery', stockStatus: 'in-stock' }],",
-  "    lines: [{ productId: 'sku-1', unitPriceCents: 1200, quantity: 2, category: 'stationery', taxClass: 'standard', stockStatus: 'in-stock' }],",
-);
-replaceOnce(
-  'test/checkout.test.mjs',
-  "  assert.deepEqual(order.categories, ['stationery']);\n",
-  "  assert.deepEqual(order.categories, ['stationery']);\n  assert.deepEqual(order.taxClasses, ['standard']);\n",
+  '  assert.equal(order.totalCents, 2400);\n',
+  '  assert.equal(order.totalCents, 2400);\n  assert.equal(order.amountDueCents, 2400);\n',
 );
 updateContracts((entry) => {
-  if (entry.id === 'CATALOG_PRODUCT_CONTRACT') entry.version = '4';
   if (entry.id === 'CART_CHECKOUT_CONTRACT') entry.version = '3';
 });
 

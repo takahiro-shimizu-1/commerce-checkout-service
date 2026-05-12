@@ -102,6 +102,7 @@
       "variables": {
         "required": [],
         "optional": [
+          "AUTOMATION_SCHEDULED_MAINTENANCE_ENABLED",
           "AUTONOMOUS_AGENT_LABEL_EXECUTE_ENABLED",
           "AUTONOMOUS_AGENT_COMMENT_EXECUTE_ENABLED"
         ],
@@ -139,6 +140,7 @@
       "variables": {
         "required": [],
         "optional": [
+          "AUTOMATION_SCHEDULED_MAINTENANCE_ENABLED",
           "AUTONOMOUS_AGENT_LABEL_EXECUTE_ENABLED",
           "AUTONOMOUS_AGENT_COMMENT_EXECUTE_ENABLED",
           "AUTOMATION_ENABLE_CODEGEN_WRITE",
@@ -194,6 +196,7 @@
       "variables": {
         "required": [],
         "optional": [
+          "AUTOMATION_SCHEDULED_MAINTENANCE_ENABLED",
           "AUTONOMOUS_AGENT_LABEL_EXECUTE_ENABLED",
           "AUTONOMOUS_AGENT_COMMENT_EXECUTE_ENABLED",
           "AUTOMATION_ENABLE_CODEGEN_WRITE",

@@ -5,7 +5,7 @@ import { CHECKOUT_ORDER_CONTRACT, priceOrder } from '../src/checkout.mjs';
 test('checkout prices a cart contract payload', () => {
   assert.equal(CHECKOUT_ORDER_CONTRACT, 'checkout-order-v1');
   const order = priceOrder({
-    lines: [{ productId: 'sku-1', unitPriceCents: 1200, quantity: 2, category: 'stationery', taxClass: 'standard', stockStatus: 'in-stock', fulfillmentRegion: 'JP' }],
+    lines: [{ productId: 'sku-1', unitPriceCents: 1200, quantity: 2, category: 'stationery', taxClass: 'standard', stockStatus: 'in-stock', fulfillmentRegion: 'JP', lifecycleBadge: 'standard-flow' }],
     subtotalCents: 2400,
     totalCents: 2400,
     currency: 'JPY',
@@ -20,4 +20,5 @@ test('checkout prices a cart contract payload', () => {
   assert.deepEqual(order.categories, ['stationery']);
   assert.deepEqual(order.taxClasses, ['standard']);
   assert.deepEqual(order.fulfillmentRegions, ['JP']);
+  assert.deepEqual(order.lifecycleBadges, ['standard-flow']);
 });

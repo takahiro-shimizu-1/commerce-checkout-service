@@ -12,11 +12,13 @@ export function priceOrder(checkoutCart) {
   const categories = [...new Set(checkoutCart.lines.map((line) => line.category).filter(Boolean))];
   const taxClasses = [...new Set(checkoutCart.lines.map((line) => line.taxClass).filter(Boolean))];
   const fulfillmentRegions = [...new Set(checkoutCart.lines.map((line) => line.fulfillmentRegion).filter(Boolean))];
+  const lifecycleBadges = [...new Set(checkoutCart.lines.map((line) => line.lifecycleBadge).filter(Boolean))];
   return {
     status: 'priced',
     categories,
     taxClasses,
     fulfillmentRegions,
+    lifecycleBadges,
     lineCount: checkoutCart.lines.length,
     subtotalCents: checkoutCart.subtotalCents,
     totalCents: checkoutCart.totalCents,

@@ -5,6 +5,7 @@ export const CHECKOUT_ORDER_CONTRACT = 'checkout-order-v1';
 export function priceOrder(checkoutCart) {
   if (!checkoutCart || !Array.isArray(checkoutCart.lines)) throw new Error('invalid checkout cart');
   if (checkoutCart.pricingMode !== 'gross') throw new Error('unsupported pricing mode');
+  if (checkoutCart.checkoutReady !== true) throw new Error('checkout cart is not marked ready');
   if (checkoutCart.lines.some((line) => line.stockStatus !== 'in-stock')) {
     throw new Error('checkout cart contains unavailable product');
   }
@@ -22,5 +23,6 @@ export function priceOrder(checkoutCart) {
     amountDueCents: checkoutCart.totalCents,
     currency: checkoutCart.currency,
     pricingMode: checkoutCart.pricingMode,
+    checkoutReady: checkoutCart.checkoutReady,
   };
 }

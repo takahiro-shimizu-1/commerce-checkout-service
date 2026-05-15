@@ -6,6 +6,7 @@ export function priceOrder(checkoutCart) {
   if (!checkoutCart || !Array.isArray(checkoutCart.lines)) throw new Error('invalid checkout cart');
   if (checkoutCart.pricingMode !== 'gross') throw new Error('unsupported pricing mode');
   if (checkoutCart.checkoutReady !== true) throw new Error('checkout cart is not marked ready');
+  if (checkoutCart.handoffNote !== 'ready-for-payment') throw new Error('missing handoff note');
   if (checkoutCart.lines.some((line) => line.stockStatus !== 'in-stock')) {
     throw new Error('checkout cart contains unavailable product');
   }
@@ -26,5 +27,6 @@ export function priceOrder(checkoutCart) {
     currency: checkoutCart.currency,
     pricingMode: checkoutCart.pricingMode,
     checkoutReady: checkoutCart.checkoutReady,
+    handoffNote: checkoutCart.handoffNote,
   };
 }

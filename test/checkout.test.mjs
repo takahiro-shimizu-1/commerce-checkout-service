@@ -11,12 +11,14 @@ test('checkout prices a cart contract payload', () => {
     currency: 'JPY',
     pricingMode: 'gross',
     checkoutReady: true,
+    handoffNote: 'ready-for-payment',
   });
   assert.equal(order.status, 'priced');
   assert.equal(order.totalCents, 2400);
   assert.equal(order.amountDueCents, 2400);
   assert.equal(order.pricingMode, 'gross');
   assert.equal(order.checkoutReady, true);
+  assert.equal(order.handoffNote, 'ready-for-payment');
   assert.deepEqual(order.categories, ['stationery']);
   assert.deepEqual(order.taxClasses, ['standard']);
   assert.deepEqual(order.fulfillmentRegions, ['JP']);

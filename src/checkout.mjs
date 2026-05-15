@@ -14,12 +14,14 @@ export function priceOrder(checkoutCart) {
   const taxClasses = [...new Set(checkoutCart.lines.map((line) => line.taxClass).filter(Boolean))];
   const fulfillmentRegions = [...new Set(checkoutCart.lines.map((line) => line.fulfillmentRegion).filter(Boolean))];
   const lifecycleBadges = [...new Set(checkoutCart.lines.map((line) => line.lifecycleBadge).filter(Boolean))];
+  const qualitySignals = [...new Set(checkoutCart.lines.map((line) => line.qualitySignal).filter(Boolean))];
   return {
     status: 'priced',
     categories,
     taxClasses,
     fulfillmentRegions,
     lifecycleBadges,
+    qualitySignals,
     lineCount: checkoutCart.lines.length,
     subtotalCents: checkoutCart.subtotalCents,
     totalCents: checkoutCart.totalCents,

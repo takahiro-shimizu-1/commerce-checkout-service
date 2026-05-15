@@ -7,7 +7,7 @@
       "role": "consumer",
       "symbol": "CATALOG_PRODUCT_CONTRACT",
       "filePath": "src/checkout.mjs",
-      "version": "7",
+      "version": "10",
       "providers": [
         "features/catalog"
       ]
@@ -18,7 +18,7 @@
       "role": "consumer",
       "symbol": "CART_CHECKOUT_CONTRACT",
       "filePath": "src/checkout.mjs",
-      "version": "9",
+      "version": "10",
       "providers": [
         "features/cart"
       ]
@@ -29,7 +29,7 @@
       "role": "provider",
       "symbol": "CHECKOUT_ORDER_CONTRACT",
       "filePath": "src/checkout.mjs",
-      "version": "4",
+      "version": "5",
       "consumers": [
         "frontends/storefront"
       ]

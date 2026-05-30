@@ -27,7 +27,7 @@ on:
 
 env:
   NODE_VERSION: '20'
-  SHARED_RUNNER_COMMAND: "npm exec --yes --package @takahiro-shimizu-1/automation-runner@0.1.24 -- automation-runner"
+  SHARED_RUNNER_COMMAND: "npm exec --yes --package @takahiro-shimizu-1/automation-runner@0.1.25 -- automation-runner"
   SHARED_RUNNER_PACKAGE_SCOPE: "@takahiro-shimizu-1"
   SHARED_RUNNER_REGISTRY_URL: "https://npm.pkg.github.com"
   NODE_AUTH_TOKEN: ${{ secrets.AUTOMATION_RUNNER_PACKAGE_TOKEN || github.token }}
@@ -111,6 +111,7 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           USE_WORKTREE: 'true'
           AUTOMATION_CREATE_CHILD_ISSUES: ${{ vars.AUTOMATION_CREATE_CHILD_ISSUES }}
+          AUTOMATION_EXECUTION_LEDGER_ENFORCE_ASSIGNMENT_GATES: 'true'
           AUTOMATION_ENABLE_PR_WRITE: ${{ vars.AUTOMATION_ENABLE_PR_WRITE }}
           AUTOMATION_PR_BASE: ${{ vars.AUTOMATION_PR_BASE }}
           AUTOMATION_PR_REVIEWERS: ${{ vars.AUTOMATION_PR_REVIEWERS }}

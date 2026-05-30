@@ -26,7 +26,7 @@ on:
 
 env:
   NODE_VERSION: '20'
-  SHARED_RUNNER_COMMAND: "npm exec --yes --package @takahiro-shimizu-1/automation-runner@0.1.18 -- automation-runner"
+  SHARED_RUNNER_COMMAND: "npm exec --yes --package @takahiro-shimizu-1/automation-runner@0.1.19 -- automation-runner"
   SHARED_RUNNER_PACKAGE_SCOPE: "@takahiro-shimizu-1"
   SHARED_RUNNER_REGISTRY_URL: "https://npm.pkg.github.com"
   AUTOMATION_RUNNER_SOURCE_REF: ${{ vars.AUTOMATION_RUNNER_SOURCE_REF }}

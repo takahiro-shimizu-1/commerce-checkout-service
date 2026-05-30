@@ -1,7 +1,7 @@
 {
   "version": 1,
   "selectedProfile": "review-and-pr",
-  "runnerCommand": "bash .github/scripts/automation-runner-source.sh",
+  "runnerCommand": "npm exec --yes --package @takahiro-shimizu-1/automation-runner@0.1.16 -- automation-runner",
   "runnerPackage": {
     "name": "@takahiro-shimizu-1/automation-runner",
     "scope": "@takahiro-shimizu-1",
@@ -65,9 +65,16 @@
       ".github/ISSUE_TEMPLATE/agent-task.md",
       ".github/PULL_REQUEST_TEMPLATE.md"
     ],
+    "codexInstructions": [
+      "AGENTS.md"
+    ],
     "claudeCommands": [
+      ".claude/commands/setup.md",
       ".claude/commands/miyabi-auto-app.md",
       ".claude/commands/miyabi-status.md"
+    ],
+    "claudeSkills": [
+      ".claude/skills/miyabi-request/SKILL.md"
     ],
     "onboarding": [
       ".claude/settings.example.json",
@@ -103,6 +110,7 @@
         "required": [],
         "optional": [
           "AUTOMATION_SCHEDULED_MAINTENANCE_ENABLED",
+          "AUTOMATION_CREATE_CHILD_ISSUES",
           "AUTONOMOUS_AGENT_LABEL_EXECUTE_ENABLED",
           "AUTONOMOUS_AGENT_COMMENT_EXECUTE_ENABLED"
         ],
@@ -141,6 +149,7 @@
         "required": [],
         "optional": [
           "AUTOMATION_SCHEDULED_MAINTENANCE_ENABLED",
+          "AUTOMATION_CREATE_CHILD_ISSUES",
           "AUTONOMOUS_AGENT_LABEL_EXECUTE_ENABLED",
           "AUTONOMOUS_AGENT_COMMENT_EXECUTE_ENABLED",
           "AUTOMATION_ENABLE_CODEGEN_WRITE",
@@ -197,6 +206,7 @@
         "required": [],
         "optional": [
           "AUTOMATION_SCHEDULED_MAINTENANCE_ENABLED",
+          "AUTOMATION_CREATE_CHILD_ISSUES",
           "AUTONOMOUS_AGENT_LABEL_EXECUTE_ENABLED",
           "AUTONOMOUS_AGENT_COMMENT_EXECUTE_ENABLED",
           "AUTOMATION_ENABLE_CODEGEN_WRITE",

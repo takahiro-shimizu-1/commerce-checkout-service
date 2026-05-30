@@ -18,7 +18,7 @@ permissions:
 
 env:
   NODE_VERSION: '20'
-  SHARED_RUNNER_COMMAND: "bash .github/scripts/automation-runner-source.sh"
+  SHARED_RUNNER_COMMAND: "npm exec --yes --package @takahiro-shimizu-1/automation-runner@0.1.16 -- automation-runner"
   SHARED_RUNNER_PACKAGE_SCOPE: "@takahiro-shimizu-1"
   SHARED_RUNNER_REGISTRY_URL: "https://npm.pkg.github.com"
   NODE_AUTH_TOKEN: ${{ secrets.AUTOMATION_RUNNER_PACKAGE_TOKEN || github.token }}
@@ -66,6 +66,7 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           GITHUB_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          MIYABI_LEDGER_PR_MARKER_MODE: ${{ vars.MIYABI_LEDGER_PR_MARKER_MODE || 'observe' }}
         run: |
           $SHARED_RUNNER_COMMAND pr-review-gate > /tmp/pr-review-gate.json
           cat /tmp/pr-review-gate.json
@@ -93,6 +94,12 @@ jobs:
             `- Status: ${result.status}`,
             `- Automation-managed: ${result.automationManaged}`,
             `- Gate comment action: ${result.commentAction}`,
+            `- Ledger marker mode: ${result.ledgerMarker?.mode || 'unknown'}`,
+            `- Ledger marker valid: ${String(result.ledgerMarker?.valid ?? false)}`,
+            `- Ledger binding valid: ${String(result.ledgerBinding?.valid ?? false)}`,
+            `- ImpactDecision: ${result.impactDecision?.decisionId || 'not-detected'}`,
+            `- ImpactDecision valid: ${String(result.impactDecision?.valid ?? true)}`,
+            `- Required repos: ${(result.impactDecision?.requiredRepos || []).join(', ') || 'none'}`,
             `- Labels applied: ${(result.labelsApplied || []).join(', ') || 'none'}`,
             `- Labels removed: ${(result.labelsRemoved || []).join(', ') || 'none'}`,
           ];

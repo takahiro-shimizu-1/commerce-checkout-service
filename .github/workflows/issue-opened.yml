@@ -47,33 +47,84 @@ jobs:
             }
 
             const labels = new Set();
+            const hasLabelKind = (kind) => [...existingLabels].some((label) => label.includes(`${kind}:`));
+            const countKeywordMatches = (source, keywords) =>
+              keywords.reduce((count, keyword) => count + (source.includes(keyword) ? 1 : 0), 0);
+            const chooseTypeLabel = (source) => {
+              const scoredLabels = [
+                {
+                  label: '🐛 type:bug',
+                  score: countKeywordMatches(source, [
+                    'bug', 'error', 'failure', 'failed', 'crash', 'broken', 'fix',
+                    'バグ', '不具合', 'エラー', '失敗', '落ちる', '壊れ', '直して'
+                  ])
+                },
+                {
+                  label: '✨ type:feature',
+                  score: countKeywordMatches(source, [
+                    'feature', 'add', 'implement', 'create', 'support', 'rename', 'api', 'contract',
+                    'workflow', 'cross-repo', 'cross repo', 'impact',
+                    '機能', '追加', '実装', '作成', '対応', '変更', '改名', '横断', '連携', '影響'
+                  ])
+                },
+                {
+                  label: '♻️ type:refactor',
+                  score: countKeywordMatches(source, [
+                    'refactor', 'cleanup', 'rename', '整理', 'リファクタ', '構造変更'
+                  ])
+                },
+                {
+                  label: '🧪 type:test',
+                  score: countKeywordMatches(source, [
+                    'test', 'coverage', 'verify', 'validation', 'smoke', 'e2e',
+                    'テスト', '検証', '確認'
+                  ])
+                },
+                {
+                  label: '📚 type:docs',
+                  score: countKeywordMatches(source, [
+                    'doc', 'docs', 'readme', 'document', 'guide',
+                    'ドキュメント', '手順書', '説明', '記事'
+                  ])
+                }
+              ];
+              const [bestNonDocs] = scoredLabels
+                .filter((entry) => entry.label !== '📚 type:docs')
+                .sort((a, b) => b.score - a.score);
+              const docsScore = scoredLabels.find((entry) => entry.label === '📚 type:docs').score;
+              if (bestNonDocs && bestNonDocs.score > 0) {
+                return bestNonDocs.label;
+              }
+              if (docsScore > 0) {
+                return '📚 type:docs';
+              }
+              return null;
+            };
 
-            if (text.includes('bug') || text.includes('error') || text.includes('fix')) {
-              labels.add('🐛 type:bug');
-            } else if (text.includes('feature') || text.includes('add') || text.includes('implement')) {
-              labels.add('✨ type:feature');
-            } else if (text.includes('doc') || text.includes('readme')) {
-              labels.add('📚 type:docs');
-            } else if (text.includes('refactor') || text.includes('cleanup')) {
-              labels.add('♻️ type:refactor');
-            } else if (text.includes('test') || text.includes('coverage')) {
-              labels.add('🧪 type:test');
+            if (!hasLabelKind('type')) {
+              const typeLabel = chooseTypeLabel(text);
+              if (typeLabel) {
+                labels.add(typeLabel);
+              }
             }
 
-            if (text.includes('urgent') || text.includes('critical')) {
-              labels.add('📊 priority:P0-Critical');
-            } else if (text.includes('important') || text.includes('high')) {
-              labels.add('⚠️ priority:P1-High');
-            } else {
-              labels.add('📊 priority:P2-Medium');
+            if (!hasLabelKind('priority')) {
+              if (text.includes('urgent') || text.includes('critical') || text.includes('緊急') || text.includes('重大')) {
+                labels.add('📊 priority:P0-Critical');
+              } else if (text.includes('important') || text.includes('high') || text.includes('重要') || text.includes('高優先')) {
+                labels.add('⚠️ priority:P1-High');
+              } else {
+                labels.add('📊 priority:P2-Medium');
+              }
             }
 
-            const hasStateLabel = [...existingLabels].some((label) => label.includes('state:'));
-            if (!hasStateLabel) {
+            if (!hasLabelKind('state')) {
               labels.add('📥 state:pending');
             }
 
-            labels.add('🎯 phase:planning');
+            if (!hasLabelKind('phase')) {
+              labels.add('🎯 phase:planning');
+            }
 
             const nextLabels = [...labels].filter((label) => !existingLabels.has(label));
             if (nextLabels.length > 0) {

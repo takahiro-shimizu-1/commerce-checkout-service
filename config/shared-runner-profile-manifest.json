@@ -1,7 +1,7 @@
 {
   "version": 1,
   "selectedProfile": "review-and-pr",
-  "runnerCommand": "npm exec --yes --package @takahiro-shimizu-1/automation-runner@0.1.24 -- automation-runner",
+  "runnerCommand": "npm exec --yes --package @takahiro-shimizu-1/automation-runner@0.1.25 -- automation-runner",
   "runnerPackage": {
     "name": "@takahiro-shimizu-1/automation-runner",
     "scope": "@takahiro-shimizu-1",
@@ -111,6 +111,7 @@
         "optional": [
           "AUTOMATION_SCHEDULED_MAINTENANCE_ENABLED",
           "AUTOMATION_CREATE_CHILD_ISSUES",
+          "AUTOMATION_EXECUTION_LEDGER_ENFORCE_ASSIGNMENT_GATES",
           "AUTONOMOUS_AGENT_LABEL_EXECUTE_ENABLED",
           "AUTONOMOUS_AGENT_COMMENT_EXECUTE_ENABLED"
         ],
@@ -150,6 +151,7 @@
         "optional": [
           "AUTOMATION_SCHEDULED_MAINTENANCE_ENABLED",
           "AUTOMATION_CREATE_CHILD_ISSUES",
+          "AUTOMATION_EXECUTION_LEDGER_ENFORCE_ASSIGNMENT_GATES",
           "AUTONOMOUS_AGENT_LABEL_EXECUTE_ENABLED",
           "AUTONOMOUS_AGENT_COMMENT_EXECUTE_ENABLED",
           "AUTOMATION_ENABLE_CODEGEN_WRITE",
@@ -207,6 +209,7 @@
         "optional": [
           "AUTOMATION_SCHEDULED_MAINTENANCE_ENABLED",
           "AUTOMATION_CREATE_CHILD_ISSUES",
+          "AUTOMATION_EXECUTION_LEDGER_ENFORCE_ASSIGNMENT_GATES",
           "AUTONOMOUS_AGENT_LABEL_EXECUTE_ENABLED",
           "AUTONOMOUS_AGENT_COMMENT_EXECUTE_ENABLED",
           "AUTOMATION_ENABLE_CODEGEN_WRITE",

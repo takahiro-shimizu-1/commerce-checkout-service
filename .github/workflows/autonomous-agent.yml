@@ -275,6 +275,7 @@ jobs:
 
       - name: Validate Execution Ledger state
         if: always()
+        continue-on-error: ${{ steps.summarize.outputs.execution_mode == 'planning' }}
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |

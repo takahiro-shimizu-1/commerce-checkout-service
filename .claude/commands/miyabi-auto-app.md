@@ -9,7 +9,7 @@ description: shared runner repo-local 自律実行の正規ルート
 ## 既定コマンド
 
 ```bash
-bash .github/scripts/automation-runner-source.sh dispatch --auto
+npm exec --yes --package @takahiro-shimizu-1/automation-runner@0.1.18 -- automation-runner dispatch --auto
 ```
 
 ## 初回 setup

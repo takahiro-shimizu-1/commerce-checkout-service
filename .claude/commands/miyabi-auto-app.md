@@ -9,7 +9,7 @@ description: shared runner repo-local 自律実行の正規ルート
 ## 既定コマンド
 
 ```bash
-npm exec --yes --package @takahiro-shimizu-1/automation-runner@0.1.21 -- automation-runner dispatch --auto
+npm exec --yes --package @takahiro-shimizu-1/automation-runner@0.1.22 -- automation-runner dispatch --auto
 ```
 
 ## 初回 setup

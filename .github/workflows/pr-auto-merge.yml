@@ -19,7 +19,7 @@ permissions:
 
 env:
   NODE_VERSION: '20'
-  SHARED_RUNNER_COMMAND: "bash .github/scripts/automation-runner-source.sh"
+  SHARED_RUNNER_COMMAND: "npm exec --yes --package @takahiro-shimizu-1/automation-runner@0.1.16 -- automation-runner"
   SHARED_RUNNER_PACKAGE_SCOPE: "@takahiro-shimizu-1"
   SHARED_RUNNER_REGISTRY_URL: "https://npm.pkg.github.com"
   NODE_AUTH_TOKEN: ${{ secrets.AUTOMATION_RUNNER_PACKAGE_TOKEN || github.token }}
@@ -70,6 +70,7 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           GITHUB_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          MIYABI_LEDGER_PR_MARKER_MODE: ${{ vars.MIYABI_LEDGER_PR_MARKER_MODE || 'observe' }}
         run: |
           $SHARED_RUNNER_COMMAND pr-auto-merge > /tmp/pr-auto-merge.json
           cat /tmp/pr-auto-merge.json
@@ -129,6 +130,65 @@ jobs:
           echo "PR #${{ steps.evaluate.outputs.pr_number }} did not reach merged state after auto-merge." >&2
           exit 1
 
+      - name: Record Execution Ledger merge evidence
+        if: steps.merged.outputs.merged == 'true'
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          DECISION_JSON: ${{ steps.evaluate.outputs.decision }}
+          MERGE_JSON: ${{ steps.merged.outputs.result }}
+          LEDGER_MARKER_MODE: ${{ vars.MIYABI_LEDGER_PR_MARKER_MODE || 'observe' }}
+        run: |
+          task_id="$(node -e 'const j=JSON.parse(process.env.DECISION_JSON||"{}"); process.stdout.write(j.ledgerMarker?.marker?.taskId || "");')"
+          issue_number="$(node -e 'const j=JSON.parse(process.env.DECISION_JSON||"{}"); process.stdout.write(String(j.publishDecision?.issueNumber || ""));')"
+          pr_number="$(node -e 'const j=JSON.parse(process.env.MERGE_JSON||"{}"); process.stdout.write(String(j.number || ""));')"
+          head_ref="$(node -e 'const j=JSON.parse(process.env.MERGE_JSON||"{}"); const d=JSON.parse(process.env.DECISION_JSON||"{}"); process.stdout.write(j.headRefName || d.ledgerMarker?.marker?.branch || "");')"
+          base_ref="$(node -e 'const j=JSON.parse(process.env.MERGE_JSON||"{}"); const d=JSON.parse(process.env.DECISION_JSON||"{}"); process.stdout.write(j.baseRefName || d.ledgerMarker?.marker?.baseBranch || "");')"
+          merge_commit_sha="$(node -e 'const j=JSON.parse(process.env.MERGE_JSON||"{}"); process.stdout.write(j.mergeCommitSha || "");')"
+          merged_at="$(node -e 'const j=JSON.parse(process.env.MERGE_JSON||"{}"); process.stdout.write(j.mergedAt || "");')"
+
+          if [ -z "$task_id" ] || [ -z "$pr_number" ] || [ -z "$merge_commit_sha" ]; then
+            echo "Skipping Ledger merge evidence because task_id, pr_number, or merge_commit_sha is missing."
+            exit 0
+          fi
+
+          ref_args=()
+          if [ -n "$head_ref" ]; then
+            ref_args+=(--head-ref "$head_ref")
+          fi
+          if [ -n "$base_ref" ]; then
+            ref_args+=(--base-ref "$base_ref")
+          fi
+          if [ -n "$merged_at" ]; then
+            ref_args+=(--merged-at "$merged_at")
+          fi
+          issue_args=()
+          if [ -n "$issue_number" ]; then
+            issue_args+=(--issue-closed-by-pr)
+          fi
+
+          set +e
+          $SHARED_RUNNER_COMMAND ledger record-merge \
+            --store-root "$GITHUB_WORKSPACE" \
+            --repo "$GITHUB_REPOSITORY" \
+            --task-id "$task_id" \
+            --pr-number "$pr_number" \
+            "${ref_args[@]}" \
+            --merge-commit-sha "$merge_commit_sha" \
+            "${issue_args[@]}" \
+            --actor pr-auto-merge \
+            --idempotency-key "pr-auto-merge:${GITHUB_REPOSITORY}:${pr_number}:merge:${merge_commit_sha}" \
+            --source-run-id "$GITHUB_RUN_ID" \
+            --json
+          ledger_status=$?
+          set -e
+          if [ "$ledger_status" -ne 0 ]; then
+            if [ "$LEDGER_MARKER_MODE" = "enforce" ]; then
+              exit "$ledger_status"
+            fi
+            echo "::warning::Execution Ledger merge evidence was not recorded; continuing because marker mode is ${LEDGER_MARKER_MODE}."
+          fi
+
       - name: Classify linked issues for direct merge sync
         if: steps.merged.outputs.merged == 'true'
         id: issue-links
@@ -174,6 +234,12 @@ jobs:
             `- Can merge: ${decision.canMerge}`,
             `- Mergeable: ${String(decision.mergeable)}`,
             `- Mergeable state: ${decision.mergeableState || 'unknown'}`,
+            `- Ledger marker mode: ${decision.ledgerMarker?.mode || 'unknown'}`,
+            `- Ledger marker valid: ${String(decision.ledgerMarker?.valid ?? false)}`,
+            `- Ledger binding valid: ${String(decision.ledgerBinding?.valid ?? false)}`,
+            `- ImpactDecision: ${decision.impactDecision?.decisionId || 'not-detected'}`,
+            `- ImpactDecision valid: ${String(decision.impactDecision?.valid ?? true)}`,
+            `- Required repos: ${(decision.impactDecision?.requiredRepos || []).join(', ') || 'none'}`,
             `- Reasons: ${(decision.reasons || []).join(' | ') || 'none'}`,
           ];
 

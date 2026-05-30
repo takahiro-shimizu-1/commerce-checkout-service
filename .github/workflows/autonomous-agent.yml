@@ -247,3 +247,52 @@ jobs:
           path: |
             .ai/logs/
             .ai/parallel-reports/
+
+      - name: Publish workflow summary
+        if: always()
+        run: |
+          {
+            echo "- Trigger source: `${{ needs.check-trigger.outputs.trigger_source }}`"
+            echo "- Execution mode: `${{ needs.check-trigger.outputs.execution_mode }}`"
+            echo "- Continuity policy: `${{ steps.water_spider.outputs.continuity_policy || 'unavailable' }}`"
+            echo
+            if [ -f "${{ steps.summarize.outputs.comment_path }}" ]; then
+              cat "${{ steps.summarize.outputs.comment_path }}"
+            else
+              echo "Autonomous agent summary artifact was not generated."
+            fi
+            echo
+            if [ -f "${{ steps.water_spider.outputs.comment_path }}" ]; then
+              cat "${{ steps.water_spider.outputs.comment_path }}"
+            else
+              echo "Water Spider continuity artifact was not generated."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Comment on Issue
+        if: always()
+        uses: actions/github-script@v8
+        env:
+          COMMENT_PATH: ${{ steps.summarize.outputs.comment_path }}
+          WATER_SPIDER_COMMENT_PATH: ${{ steps.water_spider.outputs.comment_path }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const sections = [];
+            for (const path of [process.env.COMMENT_PATH, process.env.WATER_SPIDER_COMMENT_PATH]) {
+              if (path && fs.existsSync(path)) {
+                sections.push(fs.readFileSync(path, 'utf8').trim());
+              }
+            }
+            const body = sections.filter(Boolean).join('\n\n');
+            if (!body) {
+              core.info('No autonomous agent comment body was generated.');
+              return;
+            }
+            await github.rest.issues.createComment({
+              issue_number: Number('${{ needs.check-trigger.outputs.issue_number }}'),
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body
+            });

@@ -5,3 +5,5 @@ node_modules/
 .npmrc
 .ai/
 project_memory/tasks.json
+project_memory/execution-events.jsonl
+project_memory/execution-snapshot.json

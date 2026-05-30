@@ -29,6 +29,7 @@ env:
   SHARED_RUNNER_COMMAND: "bash .github/scripts/automation-runner-source.sh"
   SHARED_RUNNER_PACKAGE_SCOPE: "@takahiro-shimizu-1"
   SHARED_RUNNER_REGISTRY_URL: "https://npm.pkg.github.com"
+  AUTOMATION_RUNNER_SOURCE_REF: ${{ vars.AUTOMATION_RUNNER_SOURCE_REF }}
   NODE_AUTH_TOKEN: ${{ secrets.AUTOMATION_RUNNER_PACKAGE_TOKEN || github.token }}
 
 concurrency:
@@ -114,9 +115,28 @@ jobs:
             --bootstrap-reason "Triggered by ${{ needs.check-trigger.outputs.trigger_source }}: ${{ needs.check-trigger.outputs.trigger_note }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PROJECT_TOKEN || secrets.GITHUB_TOKEN }}
+          AUTOMATION_GITNEXUS_REPO_TOKEN: ${{ secrets.AUTOMATION_GITNEXUS_REPO_TOKEN }}
+          GHCR_READ_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           REPOSITORY: ${{ github.repository }}
           USE_WORKTREE: 'true'
+          AUTOMATION_IMPACT_DECISION_ENABLED: ${{ vars.AUTOMATION_IMPACT_DECISION_ENABLED }}
+          AUTOMATION_IMPACT_PORTFOLIO: ${{ vars.AUTOMATION_IMPACT_PORTFOLIO }}
+          AUTOMATION_GITNEXUS_PORTFOLIO: ${{ vars.AUTOMATION_GITNEXUS_PORTFOLIO }}
+          AUTOMATION_IMPACT_TARGET: ${{ vars.AUTOMATION_IMPACT_TARGET }}
+          AUTOMATION_IMPACT_SYMBOL: ${{ vars.AUTOMATION_IMPACT_SYMBOL }}
+          AUTOMATION_IMPACT_REPO: ${{ vars.AUTOMATION_IMPACT_REPO }}
+          AUTOMATION_GITNEXUS_GROUP_PATH: ${{ vars.AUTOMATION_GITNEXUS_GROUP_PATH }}
+          AUTOMATION_IMPACT_DIRECTION: ${{ vars.AUTOMATION_IMPACT_DIRECTION }}
+          AUTOMATION_GITNEXUS_PORTFOLIO_CONFIG: ${{ vars.AUTOMATION_GITNEXUS_PORTFOLIO_CONFIG }}
+          AUTOMATION_IMPACT_DECISION_ENFORCE: ${{ vars.AUTOMATION_IMPACT_DECISION_ENFORCE }}
+          AUTOMATION_IMPACT_DECISION_NO_REPORT: ${{ vars.AUTOMATION_IMPACT_DECISION_NO_REPORT }}
+          AUTOMATION_IMPACT_DECISION_ALLOW_DEGRADED: ${{ vars.AUTOMATION_IMPACT_DECISION_ALLOW_DEGRADED }}
+          AUTOMATION_IMPACT_DECISION_ALLOW_SOURCE_SCAN_CONTRACTS: ${{ vars.AUTOMATION_IMPACT_DECISION_ALLOW_SOURCE_SCAN_CONTRACTS }}
+          AUTOMATION_CONTEXT_IMPACT_MODE: ${{ vars.AUTOMATION_CONTEXT_IMPACT_MODE }}
+          AUTOMATION_CONTEXT_IMPACT_STATUS: ${{ vars.AUTOMATION_CONTEXT_IMPACT_STATUS }}
+          AUTOMATION_CONTEXT_IMPACT_GENERATED_AT: ${{ vars.AUTOMATION_CONTEXT_IMPACT_GENERATED_AT }}
+          AUTOMATION_CONTEXT_IMPACT_SUMMARY: ${{ vars.AUTOMATION_CONTEXT_IMPACT_SUMMARY }}
           AUTOMATION_CREATE_CHILD_ISSUES: ${{ vars.AUTOMATION_CREATE_CHILD_ISSUES }}
           AUTOMATION_ENABLE_PR_WRITE: ${{ vars.AUTOMATION_ENABLE_PR_WRITE }}
           AUTOMATION_PR_BASE: ${{ vars.AUTOMATION_PR_BASE }}
@@ -239,6 +259,30 @@ jobs:
           AUTOMATION_WATER_SPIDER_WORKFLOW_ID: ${{ vars.AUTOMATION_WATER_SPIDER_WORKFLOW_ID }}
           AUTOMATION_WATER_SPIDER_REF: ${{ vars.AUTOMATION_WATER_SPIDER_REF || github.ref_name }}
 
+      - name: Project Execution Ledger state
+        if: always()
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: |
+          $SHARED_RUNNER_COMMAND ledger project \
+            --store-root "$GITHUB_WORKSPACE" \
+            --repo "$GITHUB_REPOSITORY" \
+            --actor autonomous-agent \
+            --idempotency-key "autonomous-agent:${GITHUB_REPOSITORY}:${{ needs.check-trigger.outputs.issue_number }}:${GITHUB_RUN_ID}:project" \
+            --source-run-id "$GITHUB_RUN_ID" \
+            --json
+
+      - name: Validate Execution Ledger state
+        if: always()
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          $SHARED_RUNNER_COMMAND ledger validate \
+            --store-root "$GITHUB_WORKSPACE" \
+            --repo "$GITHUB_REPOSITORY" \
+            --json
+
       - name: Upload execution logs
         if: always()
         uses: actions/upload-artifact@v7
@@ -247,14 +291,17 @@ jobs:
           path: |
             .ai/logs/
             .ai/parallel-reports/
+            project_memory/tasks.json
+            project_memory/execution-events.jsonl
+            project_memory/execution-snapshot.json
 
       - name: Publish workflow summary
         if: always()
         run: |
           {
-            echo "- Trigger source: `${{ needs.check-trigger.outputs.trigger_source }}`"
-            echo "- Execution mode: `${{ needs.check-trigger.outputs.execution_mode }}`"
-            echo "- Continuity policy: `${{ steps.water_spider.outputs.continuity_policy || 'unavailable' }}`"
+            echo "- Trigger source: \`${{ needs.check-trigger.outputs.trigger_source }}\`"
+            echo "- Execution mode: \`${{ needs.check-trigger.outputs.execution_mode }}\`"
+            echo "- Continuity policy: \`${{ steps.water_spider.outputs.continuity_policy || 'unavailable' }}\`"
             echo
             if [ -f "${{ steps.summarize.outputs.comment_path }}" ]; then
               cat "${{ steps.summarize.outputs.comment_path }}"

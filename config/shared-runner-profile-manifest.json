@@ -1,7 +1,7 @@
 {
   "version": 1,
   "selectedProfile": "review-and-pr",
-  "runnerCommand": "npm exec --yes --package @takahiro-shimizu-1/automation-runner@0.1.19 -- automation-runner",
+  "runnerCommand": "npm exec --yes --package @takahiro-shimizu-1/automation-runner@0.1.21 -- automation-runner",
   "runnerPackage": {
     "name": "@takahiro-shimizu-1/automation-runner",
     "scope": "@takahiro-shimizu-1",

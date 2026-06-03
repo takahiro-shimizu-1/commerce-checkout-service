@@ -18,7 +18,7 @@ permissions:
 
 env:
   NODE_VERSION: '20'
-  SHARED_RUNNER_COMMAND: "npm exec --yes --package @takahiro-shimizu-1/automation-runner@0.1.32 -- automation-runner"
+  SHARED_RUNNER_COMMAND: "npm exec --yes --package @takahiro-shimizu-1/automation-runner@0.1.34 -- automation-runner"
   SHARED_RUNNER_PACKAGE_SCOPE: "@takahiro-shimizu-1"
   SHARED_RUNNER_REGISTRY_URL: "https://npm.pkg.github.com"
   NODE_AUTH_TOKEN: ${{ secrets.AUTOMATION_RUNNER_PACKAGE_TOKEN || github.token }}
@@ -37,6 +37,31 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           registry-url: ${{ env.SHARED_RUNNER_REGISTRY_URL }}
           scope: ${{ env.SHARED_RUNNER_PACKAGE_SCOPE }}
+
+      - name: Restore Execution Ledger artifact
+        if: github.event.pull_request.draft == false
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PULL_REQUEST_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          issue_numbers="$($SHARED_RUNNER_COMMAND pr-issue-links closing-targets || true)"
+          if [ -z "$issue_numbers" ]; then
+            echo "No closing issue target found; skipping Execution Ledger artifact restore."
+            exit 0
+          fi
+
+          IFS=',' read -r issue_number _rest <<< "$issue_numbers"
+          if [ -z "$issue_number" ]; then
+            echo "No usable closing issue number found; skipping Execution Ledger artifact restore."
+            exit 0
+          fi
+
+          artifact_name="agent-execution-logs-${issue_number}"
+          if gh run download --repo "${{ github.repository }}" --name "$artifact_name" --dir "$GITHUB_WORKSPACE"; then
+            echo "Restored Execution Ledger artifact: ${artifact_name}"
+          else
+            echo "::warning::Execution Ledger artifact ${artifact_name} was not available; PR gate will evaluate checkout state only."
+          fi
 
       - name: Repair linked issue review sync
         if: github.event.pull_request.draft == false

@@ -9,7 +9,7 @@ description: shared runner repo-local の current work を表示
 ## 既定コマンド
 
 ```bash
-npm exec --yes --package @takahiro-shimizu-1/automation-runner@0.1.32 -- automation-runner status
+npm exec --yes --package @takahiro-shimizu-1/automation-runner@0.1.34 -- automation-runner status
 ```
 
 ## 見るもの

@@ -1,32 +1,58 @@
 ---
-name: Miyabi task
-about: Request a repo-local automation lifecycle check
-title: "[Miyabi] "
-labels: []
-assignees: ""
+name: Agent Task
+about: Shared runner が扱う標準タスク
+title: "[Task] "
+labels: ["📥 state:pending", "🎯 phase:planning"]
+assignees: []
 ---
 
-Repo: commerce-checkout-service
+## Summary
+
+<!-- 何をしたいか -->
 
 ## Goal
 
-Describe the change or check needed in this repo.
+<!-- 最終状態 -->
 
-## Automation task
+## Tasks
 
-miyabi-task: replace-with-supported-task-id
+- [ ] <!-- 実行できる作業。大きい要望は2-6件に分ける -->
+- [ ] <!-- 横断修正で required repo が分かる場合は `owner/repo`: 実行する作業 -->
 
-Supported task ids:
+## Impact Hints
 
-- commerce-platform: platform-record-coordination
-- commerce-catalog-service: catalog-add-product-category
-- commerce-cart-service: cart-preserve-product-category
-- commerce-checkout-service: checkout-report-product-categories
+- Target repo: `current repo`
+- Related repos: `unknown`
+- Likely surfaces: `unknown`
 
-## Expected result
+## ImpactDecision
 
-- Miyabi Task Lifecycle comments with task decomposition
-- A code change PR is opened
-- PR checks pass
-- The PR is merged
-- This issue is closed
+- Status: `not-resolved-at-intake`
+- Decision source: planning resolver confirms required repo set before execution
+- Required repos: unknown
+- Required evidence: `pull-request`, `merge-commit`, `ledger-record` for every required repo
+
+## Target Surface
+
+<!-- 対象 repo / module / route / UI / workflow など -->
+
+## Candidate Files
+
+<!-- 分かる場合だけ concrete file path を書く。例: `src/app.ts` -->
+
+## Completion Criteria
+
+- [ ]
+- [ ]
+
+## Constraints
+
+<!-- 触ってはいけないもの、守るべき契約 -->
+
+## Dependencies
+
+<!-- none、または前提 Issue / repo / merge -->
+
+## Notes
+
+<!-- 補足 -->

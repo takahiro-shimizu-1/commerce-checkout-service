@@ -28,6 +28,8 @@
 - `## Tasks` は automation が子 Issue 分解に使う入口なので、単なる要望の言い換えではなく「実行できる作業」にする
 - 横断修正が疑われる場合は Issue 本文に `## ImpactDecision` を入れる。intake 時点で未解決なら planning で resolver が確定する前提を書く
 - required repo が分かっている場合は `## Tasks` に repo 名を入れる。不明なら `Impact Hints` に候補だけを書く
+- Issue 本文には execute gate 用に `## Target Surface` / `## Candidate Files` / `## Constraints` / `## Completion Criteria` / `## Dependencies` も入れる
+- `## Candidate Files` は本当に分かる file path だけを書く。不明なら planning で補完されるまで execute しない
 
 ## Miyabi Execution Ledger
 
@@ -75,6 +77,14 @@ Execution Ledger は、Miyabi automation が「どの task を、どの branch /
 - Required repos: `<unknown、または owner/repo と理由>`
 - Required evidence: `pull-request`, `merge-commit`, `ledger-record` for every required repo
 
+## Target Surface
+
+- <対象 repo / module / route / UI / workflow など。分かる範囲でよい>
+
+## Candidate Files
+
+<!-- 分かる場合だけ concrete file path を書く。例: `src/app.ts` -->
+
 ## Completion Criteria
 
 - [ ] <確認できる条件>
@@ -86,6 +96,10 @@ Execution Ledger は、Miyabi automation が「どの task を、どの branch /
 - Follow `AGENTS.md`
 - Do not include secrets or tokens in code, logs, or comments
 - Keep changes scoped to the requested behavior
+
+## Dependencies
+
+- <none、または前提 Issue / repo / merge があれば書く>
 
 ## Automation
 

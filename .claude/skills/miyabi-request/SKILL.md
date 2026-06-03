@@ -28,6 +28,8 @@ Do not use this skill for pure explanation, research, review-only, or status que
 - If cross-repo work is possible, include `## ImpactDecision`. If it is not resolved at intake, say planning must resolve it before execution.
 - If required repos are already known, name them in `## Tasks`; otherwise keep them in `Impact Hints` and leave `ImpactDecision` as not resolved.
 - Do not pretend to know exact files when the repo has not been inspected. Use likely surfaces in `Impact Hints` unless the exact target is known.
+- Include the execution contract sections `## Target Surface`, `## Candidate Files`, `## Constraints`, `## Completion Criteria`, and `## Dependencies`.
+- Put concrete file paths in `## Candidate Files` only when they are actually known. If they are unknown, leave a placeholder comment and let planning fill the section before execute.
 
 ## Issue Body
 
@@ -66,6 +68,14 @@ Create the Issue with this structure:
 - Required repos: `<unknown, or owner/repo with reason>`
 - Required evidence: `pull-request`, `merge-commit`, `ledger-record` for every required repo
 
+## Target Surface
+
+- <Target repo / module / route / UI / workflow surface. Use what is known.>
+
+## Candidate Files
+
+<!-- Only list concrete file paths when known, for example `src/app.ts`. -->
+
 ## Completion Criteria
 
 - [ ] <Observable success condition>
@@ -77,6 +87,10 @@ Create the Issue with this structure:
 - Follow `AGENTS.md`
 - Do not include secrets or tokens in code, logs, or comments
 - Keep changes scoped to the requested behavior
+
+## Dependencies
+
+- <none, or required issue/repo/merge prerequisite>
 
 ## Automation
 

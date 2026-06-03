@@ -1,7 +1,7 @@
 {
   "version": 1,
   "selectedProfile": "review-and-pr",
-  "runnerCommand": "npm exec --yes --package @takahiro-shimizu-1/automation-runner@0.1.30 -- automation-runner",
+  "runnerCommand": "npm exec --yes --package @takahiro-shimizu-1/automation-runner@0.1.31 -- automation-runner",
   "runnerPackage": {
     "name": "@takahiro-shimizu-1/automation-runner",
     "scope": "@takahiro-shimizu-1",
@@ -170,7 +170,8 @@
           "AUTOMATION_PR_LABELS",
           "AUTOMATION_PR_REQUIRE_MERGEABLE",
           "AUTOMATION_PR_MERGEABILITY_RETRIES",
-          "AUTOMATION_PR_MERGEABILITY_DELAY_MS"
+          "AUTOMATION_PR_MERGEABILITY_DELAY_MS",
+          "MIYABI_PR_MERGE_MODE"
         ],
         "forbidden": []
       },
@@ -229,6 +230,7 @@
           "AUTOMATION_PR_REQUIRE_MERGEABLE",
           "AUTOMATION_PR_MERGEABILITY_RETRIES",
           "AUTOMATION_PR_MERGEABILITY_DELAY_MS",
+          "MIYABI_PR_MERGE_MODE",
           "AUTOMATION_ENABLE_DEPLOY",
           "AUTOMATION_DEPLOY_COMMAND",
           "AUTOMATION_DEPLOY_BUILD_COMMAND",
